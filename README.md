@@ -12,6 +12,10 @@ Next, you'll want to activate the venv like so:
 ```bash
 .venv/Scripts/activate
 ```
+Or on Mac:
+```bash
+source .venv/bin/activate
+```
 Now navigate to the `backend` directory.
 Then, you'll want to install all backend dependencies:
 ```bash
