@@ -21,3 +21,8 @@ Then, you'll want to install all backend dependencies:
 ```bash
 pip install -r requirements.txt
 ```
+To run any notebook files you can run the following command:
+```bash
+jupyter notebook
+```
+It will open a new tab on your default browser, now you can navigate to any ipynb's. 
