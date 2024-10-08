@@ -1,4 +1,4 @@
-# A Voiceles Voice
+# A Voiceless Voice
 Hello! Welcome to our project! This was created for the CUNY Tech Prep Data Science Track Final Project
 
 # Getting Started
