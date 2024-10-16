@@ -1,0 +1,9 @@
+- [ ] get translation api working
+- [ ] make sure translations work offline
+- [x] get yolov8 model
+- [ ] download training data and test set
+- [ ] fit the model to our training data
+- [ ] test the model on test set
+- [ ] print/return out precision/accuracy/recall
+- [ ] setup a basic frontend via streamlit
+- [ ]
