@@ -1,22 +1,22 @@
 import cv2
 from cvzone.HandTrackingModule import HandDetector
-from ultralytics import YOLO # Load a pretrained YOLO model model = YOLO("yolov8n.pt")
-model = YOLO("yolov8n.pt")
+#roboflow stuff (it just works)
+#rf = Roboflow(api_key=apikey)
+#project = rf.workspace("david-lee-d0rhs").project("american-sign-language-letters")
+#version = project.version(1)
+#dataset = version.download("yolov8")
+#model = YOLO(dataset)
 cap = cv2.VideoCapture(0)
 if not cap.isOpened():
     print("Failed to open camera")
     exit()
-detector = HandDetector(maxHands=2)
+detector=HandDetector(maxHands=2)
 
 while True:
     success, img = cap.read()
+    hands,img=detector.findHands(img)
     if not success:
         print("Failed to capture image")
         continue
-    hands, img = detector.findHands(img)
-    cv2.imshow("Image", img)
-    if cv2.waitKey(1) & 0xFF == ord('q'):
-        break
-
-cap.release()
-cv2.destroyAllWindows()
+    cv2.imshow("Camera", img)
+    cv2.waitKey(1)
