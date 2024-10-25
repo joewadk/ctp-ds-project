@@ -24,10 +24,10 @@ model = YOLO(dataset)
 dataset_path = "data/ASL-Detection.v1i.yolov8/data.yaml"
 #model = YOLO("runs/detect/train/weights/best.pt") #calling my model i made via CLI  #100 epochs <- super overfitting
 #model = YOLO("runs/detect/train4/weights/best.pt") #10 epochs <- underfitting probably
-#model = YOLO("runs/detect/train5/weights/best.pt") #30 epochs <- overfitting still
+model = YOLO("runs/detect/train5/weights/best.pt") #30 epochs <- overfitting still
 #model = YOLO("runs/detect/train6/weights/best.pt")
 #model = YOLO("runs/detect/train7/weights/best.pt") #test with only 1 epoch, clearly underfitting
-model = YOLO("runs/detect/train11/weights/best.pt")
+#model = YOLO("runs/detect/train11/weights/best.pt") #new model
 #camera stuff
 
 mp_hands = mp.solutions.hands
