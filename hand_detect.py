@@ -12,19 +12,11 @@ load_dotenv() #environment variables, make a .env file with your ROBOFLOW_API_KE
 apikey = os.getenv("ROBOFLOW_API_KEY")
 rf = Roboflow(api_key=apikey)
 
-#uncomment these and move the dataset to /data
-'''
-project = rf.workspace("david-lee-d0rhs").project("american-sign-language-letters")
-version = project.version(6)
-dataset = version.download("yolov8")
-model = YOLO(dataset)
-'''
-# if this isnt ur first time running, then do this:
 
 dataset_path = "data/ASL-Detection.v1i.yolov8/data.yaml"
 #model = YOLO("runs/detect/train/weights/best.pt") #calling my model i made via CLI  #100 epochs <- super overfitting
-#model = YOLO("runs/detect/train4/weights/best.pt") #10 epochs <- underfitting probably
-model = YOLO("runs/detect/train5/weights/best.pt") #30 epochs <- overfitting still
+model = YOLO("runs/detect/train4/weights/best.pt") #10 epochs <- underfitting probably
+#model = YOLO("runs/detect/train3/weights/best.pt") #30 epochs <- overfitting still
 #model = YOLO("runs/detect/train6/weights/best.pt")
 #model = YOLO("runs/detect/train7/weights/best.pt") #test with only 1 epoch, clearly underfitting
 #model = YOLO("runs/detect/train11/weights/best.pt") #new model
