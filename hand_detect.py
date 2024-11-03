@@ -7,19 +7,22 @@ import os
 import mediapipe as mp
 load_dotenv() #environment variables, make a .env file with your ROBOFLOW_API_KEY
 
+import torch
 
 #roboflow stuff (it just works)
 apikey = os.getenv("ROBOFLOW_API_KEY")
 rf = Roboflow(api_key=apikey)
 
 
-dataset_path = "data/ASL-Detection.v1i.yolov8/data.yaml"
+dataset_path = "data/ASL-Detection.v1i.yolov8"
 #model = YOLO("runs/detect/train/weights/best.pt") #calling my model i made via CLI  #100 epochs <- super overfitting
-model = YOLO("runs/detect/train4/weights/best.pt") #10 epochs <- underfitting probably
+#model = YOLO("runs/detect/train4/weights/best.pt") #10 epochs <- underfitting probably
 #model = YOLO("runs/detect/train3/weights/best.pt") #30 epochs <- overfitting still
 #model = YOLO("runs/detect/train6/weights/best.pt")
 #model = YOLO("runs/detect/train7/weights/best.pt") #test with only 1 epoch, clearly underfitting
 #model = YOLO("runs/detect/train11/weights/best.pt") #new model
+device = torch.device('cpu')
+model = YOLO("runs/detect/train24/weights/best.pt").to(device)
 #camera stuff
 
 mp_hands = mp.solutions.hands
@@ -59,18 +62,29 @@ while True:
             # Crop the hand region
             hand_img = img[y_min:y_max, x_min:x_max]
 
-            # Use YOLO model for detection on the cropped hand region
-            yolo_results = model(hand_img)
+            # Resize the cropped hand image to the required dimensions
+            hand_img_resized = cv2.resize(hand_img, (640, 640))
+
+            # Convert the resized hand image to a tensor and add batch dimension
+            hand_img_tensor = torch.from_numpy(hand_img_resized).permute(2, 0, 1).unsqueeze(0).float().to(device)
+
+            # Use YOLO model for detection on the cropped hand region with lower confidence threshold
+            yolo_results = model(hand_img_tensor, conf=0.25)  # Set confidence threshold to 0.25
+
+            # Debug: Print YOLO results
+            print(yolo_results)
 
             # Draw detection results on the original image
             for result in yolo_results:
                 for box in result.boxes:
                     x1, y1, x2, y2 = map(int, box.xyxy[0])
                     conf = float(box.conf)  # Convert tensor to float
+                    cls = int(box.cls)  # Get the class index
+                    label = model.names[cls]  # Get the class label
                     cv2.rectangle(img, (x_min + x1, y_min + y1), (x_min + x2, y_min + y2), (0, 255, 0), 2)
-                    cv2.putText(img, f'{conf:.2f}', (x_min + x1, y_min + y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
+                    cv2.putText(img, f'{label} {conf:.2f}', (x_min + x1, y_min + y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
 
-            # Display the image
+    # Display the image
     cv2.imshow("Camera", img)
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
