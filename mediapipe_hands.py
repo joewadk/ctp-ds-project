@@ -202,12 +202,6 @@ def ml_model():
     sequence= []
     sentence= []
     threshold= 0.8
-
-    cap = cv2.VideoCapture(0)
-    if not cap.isOpened():
-        print("Failed to open camera")
-        exit()
-
     while cap.isOpened():
         ret, frame = cap.read()
         if not ret:
