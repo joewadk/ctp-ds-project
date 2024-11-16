@@ -92,12 +92,11 @@ def extract_keypoints(results):
 
 
 import os
-dataset_path= os.path.join('data') #datapath
+dataset_path= os.path.join('data')
 # actions THIS NEEDS TO BE CHANGED WITH NEW GESTURES
 actions = np.array(['hello', 'thanks', 'iloveyou'])
-
 no_sequences= 30
-sequence_length= 30 #length of data per gesture
+sequence_length= 30
 def make_dirs():
     for action in actions:
         for sequence in range(no_sequences):
@@ -112,7 +111,7 @@ def data_load():
     if not cap.isOpened():
         print("Failed to open camera")
         exit()
-
+    
     for action in actions:
         for sequence in range(no_sequences):
             for frame_num in range(sequence_length):
@@ -182,71 +181,8 @@ def new_model(): #run only if you want to make a new model
     model.fit(X_train, y_train, epochs=1000, callbacks=[tb_callback])
     return model
 
-def load_model(): #run only if you have action.h5
-    from tensorflow.keras.models import load_model
-    model= load_model('action.h5') #change the h5 model to new_action.h5 if adding gestures
-    return model
-
-def insights(model, X_train, y_train): #2 cm's, accuracy metrics
-    from sklearn.metrics import accuracy_score, multilabel_confusion_matrix, confusion_matrix
-    yhat= model.predict(X_train)
-    y_true= np.argmax(y_train, axis=1).tolist()
-    yhat=np.argmax(yhat, axis=1).tolist()
-    print(multilabel_confusion_matrix(y_true, yhat))
-    print(confusion_matrix(y_true, yhat))
-    print(accuracy_score(y_true, yhat))
-
-def ml_model():
-    #model=new_model(X_train, y_train)
-    model= load_model()
-
-    cap = cv2.VideoCapture(0)
-    sequence= []
-    sentence= []
-    threshold= 0.8
-    while cap.isOpened():
-        ret, frame = cap.read()
-        if not ret:
-            print("Failed to capture image")
-            break
-        
-        #image manipulation
-        image, results = mediapipe_detect(frame, holistic)
-        draw_landmarks(image, results)
-
-        #prediction logic
-        keypoints= extract_keypoints(results)
-        sequence.append(keypoints)
-        sequence= sequence[-30:]
-        if len(sequence)==30:
-            res= model.predict(np.expand_dims(sequence, axis=0))[0]
-            print(actions[np.argmax(res)])
-            #sentence.append(actions[np.argmax(res)])
-
-            # visualize the prediction
-            if np.max(res)>threshold:
-                if len(sentence)>0:
-                    if actions[np.argmax(res)]!=sentence[-1]:
-                        sentence.append(actions[np.argmax(res)])
-                else:
-                    sentence.append(actions[np.argmax(res)])
-
-            if len(sentence)>5:
-                sentence= sentence[-5:]
-            cv2.rectangle(image, (0,0), (640, 40), (245, 117, 16), -1)
-            cv2.putText(image, ' '.join(sentence), (3,30), cv2.FONT_HERSHEY_SIMPLEX, 1, (255,255,255), 2, cv2.LINE_AA)  
-
-        # Display the frame
-        cv2.imshow('frame', image)
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            break
-
-    cap.release()
-    cv2.destroyAllWindows()
-
-
-
 if __name__ == "__main__":
-    #uncomment as needed
-    #basic_mediapipe()
-    ml_model()
+    make_dirs()
+    data_load()
+    model= new_model()
+    model.save('new_action.h5')
