@@ -34,7 +34,7 @@ def create_frame_landmarks(results,frame, xyz):
     left_hand=left_hand.reset_index().rename(columns={'index':'landmark_index'}).assign(type='left_hand')
     right_hand=right_hand.reset_index().rename(columns={'index':'landmark_index'}).assign(type='right_hand')
     landmarks=pd.concat([face,pose,left_hand,right_hand]).reset_index(drop=True)
-    print(landmarks.columns,xyz_skel.columns)
+    #print(landmarks.columns,xyz_skel.columns)
     landmarks=xyz_skel.merge(landmarks,how='left',on=['type','landmark_index'])
     landmarks=landmarks.assign(frame=frame)
     return landmarks
@@ -84,14 +84,17 @@ def capture(xyz):
         cap.release()
         cv2.destroyAllWindows()
     return all_landmarks
-
-if __name__ == "__main__":
+def capture_sign():
     BASE_DIR = 'data/asl-signs/'
     train = pd.read_csv(f'{BASE_DIR}/train.csv')
     xyz=pd.read_parquet(f'{BASE_DIR}/train_landmark_files/16069/695046.parquet')
     all_landmarks=capture(xyz)
     all_landmarks=pd.concat(all_landmarks).reset_index(drop=True)
     all_landmarks.to_parquet('landmarks.parquet')
+    return
+
+if __name__ == "__main__":
+    capture_sign()
     print('Landmarks saved')
 
 
