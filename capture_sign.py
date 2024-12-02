@@ -71,12 +71,12 @@ def capture(xyz):
                 connection_drawing_spec=mp_drawing_styles.get_default_face_mesh_contours_style())
             mp_drawing.draw_landmarks(
                 image, results.pose_landmarks, mp_holistic.POSE_CONNECTIONS, landmark_drawing_spec=mp_drawing_styles.get_default_pose_landmarks_style())
-            '''
+            
             mp_drawing.draw_landmarks(
                 image, results.left_hand_landmarks, mp_holistic.HAND_CONNECTIONS, landmark_drawing_spec=mp_drawing_styles.get_default_hand_landmarks_style())
             mp_drawing.draw_landmarks(
                 image, results.right_hand_landmarks, mp_holistic.HAND_CONNECTIONS, landmark_drawing_spec=mp_drawing_styles.get_default_hand_landmarks_style())
-            ''' #in theory these should work. ill have to test it. base functionality with pose and face works.
+             #in theory these should work. ill have to test it. base functionality with pose and face works. ---edit: it works. flawlessly now too
             cv2.imshow('MediaPipe Holistic', image)
             if cv2.waitKey(5) & 0xFF == ord('q'):
                 break
