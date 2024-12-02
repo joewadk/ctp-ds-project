@@ -4,6 +4,7 @@ import os
 from matplotlib import pyplot as plt
 import time
 import mediapipe as mp
+from frontend.streamlit import display_app_header, setup_controls
 
 #load mediapipe stuff
 mp_holistic = mp.solutions.holistic
