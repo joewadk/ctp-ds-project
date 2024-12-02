@@ -124,7 +124,7 @@ def main():
     st.markdown("<hr>", unsafe_allow_html=True)
     st.markdown("<h4 style='text-align: center;'>Live Video Feed</h4>", unsafe_allow_html=True)
 
-    # Add control buttons for "Play Translated Speech" button outside of video container
+    # Play translated speech button
     if st.button("Play Translated Speech"):
         if "sentence" in st.session_state and st.session_state.sentence:
             text_to_speak = " ".join(st.session_state.sentence)
@@ -133,7 +133,7 @@ def main():
                 engine.say(text_to_speak)  
                 engine.runAndWait()  
 
-    # Start or stop the camera based on button presses
+    # start or stop the camera based on button presses
     if start_video and not st.session_state.camera_started:
         st.session_state.camera_started = True
         capture_camera(stop_video, selected_language, volume_control, volume_level)
