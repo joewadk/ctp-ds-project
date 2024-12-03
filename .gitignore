@@ -2,3 +2,7 @@
 .env
 .ipynb_checkpoints
 data
+venv
+__pycache__
+env
+.DS_Store
