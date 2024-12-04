@@ -49,8 +49,8 @@ def classifier():
         data = data.values.reshape(n_frames, ROWS_PER_FRAME, len(data_columns))
         return data.astype(np.float32)
 
-    model_path = "model.tflite" #should return 'mad'
-    pq_path = 'landmarks.parquet'
+    model_path = "model.tflite" #model path
+    pq_path = 'landmarks.parquet' #landmark path, this is the file that will be used to predict the sign
     frames = load_relevant_data_subset(pq_path)
     #print(frames.shape)
     sign = ORD2SIGN[run_model(model_path, frames)]
