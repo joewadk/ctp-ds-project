@@ -62,23 +62,35 @@ def setup_controls():
     """Sets up the user interface controls."""
 
     ## camera buttons ## 
+    if 'signs' not in st.session_state:
+        st.session_state.signs = []
+
+    # Camera buttons
     with st.container():
         col1, col2 = st.columns(2)
-        start_video = col1.button("Next")
-        stop_video = col2.button("End")
-        to_code=''
-    ## language select ## 
-        selected_language = st.selectbox(
-            "Select Language",
-            list(LANGUAGES.keys()),
-            index=0,
-            help="Choose the language for ASL interpretation",
-        )
-        #print(selected_language)
-        to_code=LANGUAGES[selected_language]
+        
+        with col1:
+            if st.button('Capture Sign'):
+                capture_sign()
+                sign = classifier()
+                st.session_state.signs.append(sign)
+                st.write(f"Captured signs: {st.session_state.signs}")
+        
+        with col2:
+            if st.button('Clear Sentence'):
+                st.session_state.signs=[]
+                st.write(f"Sentence Cleared!")
     
+    # Language select
+    selected_language = st.selectbox(
+        "Select Language",
+        list(LANGUAGES.keys()),
+        index=0,
+        help="Choose the language for ASL interpretation",
+    )
+    to_code = LANGUAGES[selected_language]
 
-    return start_video, stop_video, selected_language,to_code
+    return selected_language, to_code, st.session_state.signs
 
 ### grabbed from openAI documentation ### 
 def generate_audio_with_openai(text):
@@ -100,23 +112,22 @@ def generate_audio_with_openai(text):
 def main():
     """Main function to run the Streamlit app."""
     display_app_header()
-
-
-    start_video, stop_video, selected_language, to_lang= setup_controls()
+    selected_language, to_lang, signs = setup_controls()
+    translated=''
+    for sign in signs:
+        translated+=translate_text(sign,to_lang)+' '
     
-    translated=translate_text('hello everybody',to_lang)
-    print(translated)
+    output=translate_text(translated,to_lang)
+    print(output)
     st.markdown("<hr>", unsafe_allow_html=True)
     st.markdown("<h4 style='text-align: center;'>Translated Audio</h4>", unsafe_allow_html=True)
     
     
     # Audio playback
     if st.button("Play Translated Speech"):
-        generate_audio_with_openai(translated)
+        generate_audio_with_openai(output)
 
 
 if __name__ == "__main__":
     main()
 
-## TO DO: ##
-## --> connect tranlsate.py 
