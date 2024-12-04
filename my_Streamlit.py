@@ -76,12 +76,9 @@ def setup_controls():
         )
         #print(selected_language)
         to_code=LANGUAGES[selected_language]
-    ## audio settings ## 
-    with st.expander("Audio Settings"):
-        volume_control = st.checkbox("Mute Audio", value=False)
-        return_audio = st.checkbox("Return Audio Response", value=True)
+    
 
-    return start_video, stop_video, selected_language, volume_control, return_audio,to_code
+    return start_video, stop_video, selected_language,to_code
 
 ### grabbed from openAI documentation ### 
 def generate_audio_with_openai(text):
@@ -105,12 +102,12 @@ def main():
     display_app_header()
 
 
-    start_video, stop_video, selected_language, volume_control, return_audio, to_lang= setup_controls()
+    start_video, stop_video, selected_language, to_lang= setup_controls()
     
-    translated=translate_text('kill yourself',to_lang)
+    translated=translate_text('hello everybody',to_lang)
     print(translated)
     st.markdown("<hr>", unsafe_allow_html=True)
-    st.markdown("<h4 style='text-align: center;'>Live Video Feed</h4>", unsafe_allow_html=True)
+    st.markdown("<h4 style='text-align: center;'>Translated Audio</h4>", unsafe_allow_html=True)
     
     
     # Audio playback
