@@ -8,23 +8,17 @@ from dotenv import load_dotenv
 from our_Translate import translate_text
 from capture_sign import capture_sign
 from classifier import classifier
+from translate_hf_model import translate_hf_model
 #from translate import translate_text, download_languages_for_demo ## still need to implement functions
 #from classifier import classifier ## implement function
 #from capture_sign import capture_sign ## implement function
 
 #download_languages_for_demo() ## from translate
 
-##classifier()
-##capture_sign()
-##translate_text()
 
-
-### Environment variables --> loading + initializing api key ###
 load_dotenv()
 
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-
-## load my api key + initialize it ##
 if not OPENAI_API_KEY:
     st.error("API key not found! Check for a valid .env file with 'OPENAI_API_KEY'.")
 
@@ -33,19 +27,27 @@ from pathlib import Path
 from openai import OpenAI
 client = OpenAI()
 
-# Languages # ~~ from mackenzie's lang for demo function
+#dctionary for languages
 LANGUAGES = {
-    "English": "en",
-    "Spanish": "es",
-    "French": "fr",
-    "Japanese": "ja",
-    "German": "de",
-    "Chinese": "zh",
-    "Hindi": "hi",
-    "Arabic": "ar",
-    "Russian": "ru",
-    "Urdu": "ur",
-    "Bengali": "bn",
+
+    "English": "en_XX",
+    "Spanish": "es_XX",
+    "French": "fr_XX",
+    "Gujarati": "gu_IN",
+    "Hindi": "hi_IN",
+    "Italian": "it_IT",
+    "Japanese": "ja_XX",
+    "Kazakh": "kk_KZ",
+    "Korean": "ko_KR",
+    "Russian": "ru_RU",
+    "Turkish": "tr_TR",
+    "Vietnamese": "vi_VN",
+    "Chinese": "zh_CN",
+    "Bengali": "bn_IN",
+    "Polish": "pl_PL",
+    "Portuguese": "pt_XX",
+    "Swedish": "sv_SE",
+    "Ukrainian": "uk_UA",
 }
 
 # header #
@@ -91,6 +93,7 @@ def setup_controls():
     to_code = LANGUAGES[selected_language]
 
     return selected_language, to_code, st.session_state.signs
+    
 
 ### grabbed from openAI documentation ### 
 def generate_audio_with_openai(text):
@@ -113,20 +116,33 @@ def main():
     """Main function to run the Streamlit app."""
     display_app_header()
     selected_language, to_lang, signs = setup_controls()
-    translated=''
-    for sign in signs:
-        translated+=translate_text(sign,to_lang)+' '
     
-    output=translate_text(translated,to_lang)
-    print(output)
-    st.markdown("<hr>", unsafe_allow_html=True)
-    st.markdown("<h4 style='text-align: center;'>Translated Audio</h4>", unsafe_allow_html=True)
+    if st.button('Translate'):
+        sentence=''
+        
+        for sign in signs:
+            #print(sign)
+            if sign=='None' or sign==' ' or sign=='':
+                continue #skip
+            sentence+= sign
+  
+        if to_lang=='en_XX':
+            output=sentence #skip translation
+        else:
+            output = translate_hf_model(sentence, to_lang)
+        if output=='Environment Canada, Inc.':
+            output='No signs detected' 
+        print(output)#weird translation error
+        st.session_state.translated_text = output
+        st.write(f"Translated text: {output}")
     
-    
-    # Audio playback
-    if st.button("Play Translated Speech"):
-        generate_audio_with_openai(output)
-
+    if 'translated_text' in st.session_state:
+        st.markdown("<hr>", unsafe_allow_html=True)
+        st.markdown("<h4 style='text-align: center;'>Translated Audio</h4>", unsafe_allow_html=True)
+        
+        # Audio playback
+        if st.button("Play Translated Speech"):
+            generate_audio_with_openai(st.session_state.translated_text)
 
 if __name__ == "__main__":
     main()

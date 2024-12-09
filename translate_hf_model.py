@@ -36,4 +36,4 @@ def translate_hf_model(text, target_lang):
     local_model_path = './local_model'
     translate = create_translator(local_model_path)
     return(translate(text, target_lang))
-print(translate_hf_model('Hello.', 'it_IT'))
+print(translate_hf_model("hello", "es_XX"))
