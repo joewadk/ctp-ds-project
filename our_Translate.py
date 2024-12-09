@@ -74,12 +74,13 @@ def test_all_languages():
 
 def test_languages_we_selected_for_demo():
     to_codes_we_need = ['es', 'fr', 'ja', 'de',
-                        'zh', 'hi', 'fr', 'ar', 'ru', 'ur', 'bn']
+                        'zh', 'hi', 'ar', 'ru', 'ur', 'bn']
 
     for to_code in to_codes_we_need:
         print(f"Testing translation to {to_code}")
         translated_text = translate_text("Hello, how are you?", to_code)
         print(f"Translated text: {translated_text}")
+
 
 # Testing
 # download_all_languages()
@@ -87,6 +88,6 @@ def test_languages_we_selected_for_demo():
 # test_all_languages()
 
 
-#download_languages_for_demo()
+# download_languages_for_demo()
 
-#test_languages_we_selected_for_demo()
+# test_languages_we_selected_for_demo()
