@@ -101,12 +101,15 @@ def generate_audio_with_openai(text):
     try:
         speech_file_path = Path(__file__).parent / "speech.mp3"
         response = client.audio.speech.create(
-        model="tts-1",
-        voice="onyx",
-        input=text
+            model="tts-1-hd",
+            voice="alloy",
+            input=text
         )
 
-        response.stream_to_file(speech_file_path)
+        with open(speech_file_path, 'wb') as f:
+            for chunk in response.iter_bytes():
+                f.write(chunk)
+
         st.audio(str(speech_file_path))
     except Exception as e:
         st.error(f"Error generating audio: {e}")
