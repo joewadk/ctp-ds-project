@@ -1,0 +1,8 @@
+Arabic (ar_AR), German (de_DE), English (en_XX), Spanish (es_XX), 
+ French (fr_XX), Gujarati (gu_IN), Hindi (hi_IN), 
+Italian (it_IT), Japanese (ja_XX), Kazakh (kk_KZ), Korean (ko_KR), 
+ Russian (ru_RU), 
+ Turkish (tr_TR), Vietnamese (vi_VN), Chinese (zh_CN),
+Bengali (bn_IN), 
+ Polish (pl_PL),  Portuguese (pt_XX), 
+Swedish (sv_SE), Ukrainian (uk_UA), 
