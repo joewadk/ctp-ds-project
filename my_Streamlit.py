@@ -5,7 +5,6 @@ import os
 import openai
 import tensorflow as tf ## still need to debug
 from dotenv import load_dotenv
-from our_Translate import translate_text
 from capture_sign import capture_sign
 from classifier import classifier
 from translate_hf_model import translate_hf_model
@@ -79,9 +78,9 @@ def setup_controls():
                 st.write(f"Captured signs: {st.session_state.signs}")
         
         with col2:
-            if st.button('Clear Sentence'):
-                st.session_state.signs=[]
-                st.write(f"Sentence Cleared!")
+            if st.button('Remove Last Word'):
+                st.session_state.signs.pop()
+                st.write(f"Word removed! Current Sentence: {st.session_state.signs}")
     
     # Language select
     selected_language = st.selectbox(
@@ -127,7 +126,7 @@ def main():
             #print(sign)
             if sign=='None' or sign==' ' or sign=='':
                 continue #skip
-            sentence+= sign
+            sentence=sentence+sign+' '#add a space
   
         if to_lang=='en_XX':
             output=sentence #skip translation

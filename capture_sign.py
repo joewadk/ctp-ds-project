@@ -7,7 +7,7 @@ import numpy as np
 import os
 import pandas as pd
 import matplotlib.pyplot as plt
-
+import time
 
 def create_frame_landmarks(results,frame, xyz):
 
@@ -46,6 +46,7 @@ def capture(xyz):
     cap=cv2.VideoCapture(0)
     with mp_holistic.Holistic(min_detection_confidence=0.5,min_tracking_confidence=0.5) as holistic:
         frame=0
+        start_time = time.time()
         while cap.isOpened():
             frame+=1
             success, image = cap.read()
@@ -80,7 +81,8 @@ def capture(xyz):
             cv2.imshow('MediaPipe Holistic', image)
             if cv2.waitKey(5) & 0xFF == ord('q'):
                 break
-                            
+            elif time.time() - start_time > 8:
+                break   
         cap.release()
         cv2.destroyAllWindows()
     return all_landmarks
